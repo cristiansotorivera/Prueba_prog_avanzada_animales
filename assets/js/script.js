@@ -1,17 +1,15 @@
-// Importing animal classes from external module
+// Importing animal classes from the specified file
 import {Leon, Lobo, Oso, Serpiente, Aguila} from "./clases.js";
 
-// Module encapsulating animal-related functionality
+// Module pattern for encapsulation
 const moduloAnimal = (function(){
-    // State variables for storing animal instances
+    // Variables
     let state = {
         instancias: []
     }
-
-    // Array to hold HTML for animal cards
     const card_deck_html = [] 
     
-    // Caching DOM elements for efficiency
+    // DOM Cache
     const div_animales = document.querySelector('#Animales')
     const tipo_animal = document.querySelector('#animal')
     const btn_registrar = document.querySelector('#btnRegistrar')
@@ -19,29 +17,33 @@ const moduloAnimal = (function(){
     const modal_animal = document.querySelector('.contenido-animal')
     const modal_audio = document.querySelector('.contenido-audio')
 
-    // Event listeners for various interactions
-    tipo_animal.addEventListener('change', chageHandler)
-    btn_registrar.addEventListener('click', clickHandler)
-    $('#exampleModal').on('show.bs.modal', beforeModalShow)
-    $('#audiomodal').on('show.bs.modal', beforeAudioModalShow)
-    $('#audiomodal').on('hide.bs.modal', afterAudioModalShow)
-      
-    // Function for initializing the module
+    // Events
+    tipo_animal.addEventListener('change', chageHandler) // Event listener for dropdownlist to capture animal type
+    btn_registrar.addEventListener('click', clickHandler) // Event listener for button to generate animal object and card
+
+    $('#exampleModal').on('show.bs.modal', beforeModalShow) // Event handler for modal display
+    $('#audiomodal').on('show.bs.modal', beforeAudioModalShow) // Event handler for audio modal display
+    $('#audiomodal').on('hide.bs.modal', afterAudioModalShow) // Event handler for audio modal hide
+
+    // Functions
+
+    // Main function
     async function init() {
         const json = await getAnimal()
         state.animales = json
     }
 
-    // Event handler function for dropdown list change
-    function chageHandler(e){
+    // Event handler for dropdownlist
+    function chageHandler(e) {
         e.preventDefault()
         const animal_select = filtarAnimal(state.animales, this.value)
         preview_animal.innerHTML = `<img class="ajustado" src="./assets/imgs/${animal_select.imagen}" alt="">`
     }
 
-    // Event handler function for button click
-    function clickHandler(e){
+    // Event handler for button
+    function clickHandler(e) {
         e.preventDefault()
+        // DOM Cache
         const edad_animal = document.querySelector('#edad')
         const tipo = document.querySelector('#animal')
         const comentario = document.querySelector('#comentarios')
@@ -59,20 +61,19 @@ const moduloAnimal = (function(){
             edad_animal.selectedIndex = 0;
             tipo.selectedIndex = 0;
             comentario.value = '';
-        }
-        else{
-            alert('Please complete all fields to add the animal')
+        } else {
+            alert('Por favor los campos para añadir el animal')
         }
     }
 
-    // Function to fetch animal data asynchronously
+    // Fetching animal data
     async function getAnimal(){
         const animales = await fetchAnimal()
         const arr_animales = animales.animales
         return arr_animales
     }
 
-    // Function to fetch animal data from a JSON file
+    // Fetching animal data from JSON
     async function fetchAnimal(){
         try{
             const data = await fetch('./animales.json')
@@ -81,40 +82,34 @@ const moduloAnimal = (function(){
                 return data.json()
             }
             
-        }
-        catch(e){
+        } catch(e) {
             console.error(e);
         }
     }
 
-    // Function to filter animal data based on type
+    // Filtering animal data based on type
     function filtarAnimal(animales, tipo){
         const animal_filtrado = animales.filter(animal => animal.name === tipo)
         return animal_filtrado[0]
     }
 
-    // Function to instantiate an animal object based on type
+    // Instantiating animal object based on type
     function instanciarAnimal(tipo_animal, edad_animal, comentario, animal){
         switch(tipo_animal){
-            case 'Leon':{              
+            case 'Leon':              
                 return new Leon(tipo_animal, edad_animal, animal.imagen, comentario, animal.sonido)
-            }
-            case 'Lobo':{
+            case 'Lobo':
                 return new Lobo(tipo_animal, edad_animal, animal.imagen, comentario, animal.sonido)
-            }
-            case 'Serpiente':{
+            case 'Serpiente':
                 return new Serpiente(tipo_animal, edad_animal, animal.imagen, comentario, animal.sonido)
-            }
-            case 'Oso':{               
+            case 'Oso':
                 return new Oso(tipo_animal, edad_animal, animal.imagen, comentario, animal.sonido)
-            }
-            case 'Aguila':{
+            case 'Aguila':
                 return new Aguila(tipo_animal, edad_animal, animal.imagen, comentario, animal.sonido)
-            }
         }
     }
 
-    // Function to render animal card HTML
+    // Rendering animal card
     function renderTarjeta(obj_animal, index = 0){
         const html = `<div class="card col-sm-12 col-md-6 col-lg-4 p-0">
                         <img data-toggle="modal" data-target="#exampleModal" data-index="${index}" class="tarjeta" src="assets/imgs/${obj_animal.img}" class="card-img-top" alt="${obj_animal.name}">
@@ -123,11 +118,11 @@ const moduloAnimal = (function(){
                         </div>
                     </div>`
         
-        card_deck_html.push(html)
+        card_deck_html.push(html) // Stack cards
         return card_deck_html.join('')
     }
 
-    // Function to handle modal display before showing
+    // Preparing modal before display
     function beforeModalShow(e) {
         const index = e.relatedTarget.dataset.index
         const obj_animal = state.instancias[index]
@@ -142,7 +137,7 @@ const moduloAnimal = (function(){
             </div>`
     }
 
-    // Function to handle modal display before audio modal
+    // Preparing audio modal before display
     function beforeAudioModalShow(e){
         const index = e.relatedTarget.dataset.index
         const obj_animal = state.instancias[index]
@@ -152,11 +147,14 @@ const moduloAnimal = (function(){
                                 </audio>`
     }
 
-    // Function to handle modal display after audio modal
+    // Cleaning up audio modal after hide
     function afterAudioModalShow(){
         modal_audio.innerHTML = ``
     }
 
+    // Exposing initialization function
     return {init:init}
 })()
 
+// Initializing module
+moduloAnimal.init()
