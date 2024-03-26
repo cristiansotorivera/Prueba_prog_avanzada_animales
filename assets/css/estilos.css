@@ -1,0 +1,90 @@
+/* CSS */
+
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-image: url("../imgs/fondo.jpg");
+  background-position: bottom;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+  padding: 100px;
+}
+
+/* Formulario */
+
+#preview {
+  height: 200px;
+  background-image: url(../imgs/lion.svg);
+  background-position: top;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+
+/* Tabla de Participantes */
+
+#Animales {
+  height: 100%;
+  background: #f0f0f0;
+}
+
+#Animales div div {
+  transition: all 200ms;
+}
+
+#Animales div >div:hover {
+  box-shadow: 0px 1px 5px 1px;
+}
+
+.participante {
+  max-width: 30%;
+}
+
+/* Modal */
+
+.modal-dialog{
+    max-width: 85% !important;
+}
+
+
+/* CSS */
+
+#Animales img {
+  width: 100%; /* Ensures images take up the full width of their container */
+  height: 200px; /* Set a fixed height for uniformity */
+  object-fit: cover; /* Maintain aspect ratio and crop image if necessary */
+}
+
+
+/* CSS */
+
+.card-text img {
+  max-height: 200px; /* Set a maximum height for the image */
+  width: auto; /* Allow the image to adjust its width while maintaining aspect ratio */
+  display: block; /* Ensure the image behaves as a block element */
+  margin: auto; /* Center the image horizontally */
+}
+
+
+/* Apply border radius to all images */
+img {
+  border-radius: 10px; /* Adjust the value as needed */
+}
+
+#btnRegistrar {
+  display: block;
+  margin: 0 auto; /* Horizontally center the button */
+}
+
+
+
+/* Set a fixed height for the image container */
+#Animales .card-img-top {
+  height: 150px; /* Adjust the height as needed */
+  object-fit: cover; /* Ensure images maintain aspect ratio and cover the container */
+}
