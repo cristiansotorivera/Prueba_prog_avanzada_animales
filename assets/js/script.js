@@ -1,14 +1,17 @@
+// Importing animal classes from external module
 import {Leon, Lobo, Oso, Serpiente, Aguila} from "./clases.js";
 
-
+// Module encapsulating animal-related functionality
 const moduloAnimal = (function(){
-    //variables
+    // State variables for storing animal instances
     let state = {
         instancias: []
     }
+
+    // Array to hold HTML for animal cards
     const card_deck_html = [] 
     
-    //DOMCache
+    // Caching DOM elements for efficiency
     const div_animales = document.querySelector('#Animales')
     const tipo_animal = document.querySelector('#animal')
     const btn_registrar = document.querySelector('#btnRegistrar')
@@ -16,30 +19,29 @@ const moduloAnimal = (function(){
     const modal_animal = document.querySelector('.contenido-animal')
     const modal_audio = document.querySelector('.contenido-audio')
 
-
-    //Events
-    tipo_animal.addEventListener('change', chageHandler)//Evento de dropdownlist para capturar tipo de animal
-    btn_registrar.addEventListener('click', clickHandler)//Evento de boton para generar objeto y carta de animal
-
+    // Event listeners for various interactions
+    tipo_animal.addEventListener('change', chageHandler)
+    btn_registrar.addEventListener('click', clickHandler)
     $('#exampleModal').on('show.bs.modal', beforeModalShow)
     $('#audiomodal').on('show.bs.modal', beforeAudioModalShow)
     $('#audiomodal').on('hide.bs.modal', afterAudioModalShow)
       
-
-    //Funciones
-    async function init() {//Funcion principal
+    // Function for initializing the module
+    async function init() {
         const json = await getAnimal()
         state.animales = json
     }
 
-    function chageHandler(e){//funcion de evento para dropdownlist
+    // Event handler function for dropdown list change
+    function chageHandler(e){
         e.preventDefault()
         const animal_select = filtarAnimal(state.animales, this.value)
         preview_animal.innerHTML = `<img class="ajustado" src="./assets/imgs/${animal_select.imagen}" alt="">`
     }
-    function clickHandler(e){//funcion de evento para boton
+
+    // Event handler function for button click
+    function clickHandler(e){
         e.preventDefault()
-        //DOMCache
         const edad_animal = document.querySelector('#edad')
         const tipo = document.querySelector('#animal')
         const comentario = document.querySelector('#comentarios')
@@ -50,25 +52,27 @@ const moduloAnimal = (function(){
             state.instancias.push(obj_animal)
             div_animales.innerHTML = renderTarjeta(obj_animal, state.instancias.length - 1)
 
-             // Automatically play the sound
-             const audioElement = new Audio(`assets/sounds/${obj_animal.sonido}`);
-             audioElement.play();
- 
-             edad_animal.selectedIndex = 0;
-             tipo.selectedIndex = 0;
-             comentario.value = '';
+            // Automatically play the sound
+            const audioElement = new Audio(`assets/sounds/${obj_animal.sonido}`);
+            audioElement.play();
+
+            edad_animal.selectedIndex = 0;
+            tipo.selectedIndex = 0;
+            comentario.value = '';
         }
         else{
-            alert('Por favor los campos para añadir el animal')
+            alert('Please complete all fields to add the animal')
         }
     }
 
+    // Function to fetch animal data asynchronously
     async function getAnimal(){
         const animales = await fetchAnimal()
         const arr_animales = animales.animales
         return arr_animales
     }
 
+    // Function to fetch animal data from a JSON file
     async function fetchAnimal(){
         try{
             const data = await fetch('./animales.json')
@@ -83,11 +87,13 @@ const moduloAnimal = (function(){
         }
     }
 
+    // Function to filter animal data based on type
     function filtarAnimal(animales, tipo){
         const animal_filtrado = animales.filter(animal => animal.name === tipo)
         return animal_filtrado[0]
     }
 
+    // Function to instantiate an animal object based on type
     function instanciarAnimal(tipo_animal, edad_animal, comentario, animal){
         switch(tipo_animal){
             case 'Leon':{              
@@ -108,7 +114,7 @@ const moduloAnimal = (function(){
         }
     }
 
-    //Render
+    // Function to render animal card HTML
     function renderTarjeta(obj_animal, index = 0){
         const html = `<div class="card col-sm-12 col-md-6 col-lg-4 p-0">
                         <img data-toggle="modal" data-target="#exampleModal" data-index="${index}" class="tarjeta" src="assets/imgs/${obj_animal.img}" class="card-img-top" alt="${obj_animal.name}">
@@ -117,10 +123,11 @@ const moduloAnimal = (function(){
                         </div>
                     </div>`
         
-        card_deck_html.push(html) // apila tarjetas
+        card_deck_html.push(html)
         return card_deck_html.join('')
     }
 
+    // Function to handle modal display before showing
     function beforeModalShow(e) {
         const index = e.relatedTarget.dataset.index
         const obj_animal = state.instancias[index]
@@ -135,6 +142,7 @@ const moduloAnimal = (function(){
             </div>`
     }
 
+    // Function to handle modal display before audio modal
     function beforeAudioModalShow(e){
         const index = e.relatedTarget.dataset.index
         const obj_animal = state.instancias[index]
@@ -144,6 +152,7 @@ const moduloAnimal = (function(){
                                 </audio>`
     }
 
+    // Function to handle modal display after audio modal
     function afterAudioModalShow(){
         modal_audio.innerHTML = ``
     }
@@ -151,4 +160,3 @@ const moduloAnimal = (function(){
     return {init:init}
 })()
 
-moduloAnimal.init()
