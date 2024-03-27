@@ -36,7 +36,7 @@ const moduloAnimal = (function(){
     // Event handler for dropdownlist
     function chageHandler(e) {
         e.preventDefault()
-        const animal_select = filtarAnimal(state.animales, this.value)
+        const animal_select = filtrarAnimal(state.animales, this.value)
         preview_animal.innerHTML = `<img class="ajustado" src="./assets/imgs/${animal_select.imagen}" alt="">`
     }
 
