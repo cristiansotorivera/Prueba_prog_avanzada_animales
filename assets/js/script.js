@@ -49,7 +49,7 @@ const moduloAnimal = (function(){
         const comentario = document.querySelector('#comentarios')
 
         if(edad_animal.value !== 'Seleccione un rango de años' && tipo.value !== 'Seleccione un animal' && comentario.value !== ''){
-            const animal_fil = filtarAnimal(state.animales, tipo.value)
+            const animal_fil = filtrarAnimal(state.animales, tipo.value)
             const obj_animal = instanciarAnimal(tipo.value, edad_animal.value, comentario.value, animal_fil)
             state.instancias.push(obj_animal)
             div_animales.innerHTML = renderTarjeta(obj_animal, state.instancias.length - 1)
@@ -88,7 +88,7 @@ const moduloAnimal = (function(){
     }
 
     // Filtering animal data based on type
-    function filtarAnimal(animales, tipo){
+    function filtrarAnimal(animales, tipo){
         const animal_filtrado = animales.filter(animal => animal.name === tipo)
         return animal_filtrado[0]
     }
